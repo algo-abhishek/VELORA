@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Velora</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner container">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 17L9 4L12 11L15 6L22 17H2Z" fill="var(--brand)"/></svg>
+      <span>Velora<small>Step Into Style</small></span>
+    </a>
+    <div class="nav-icons" style="margin-left:auto">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg id="themeIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="error-box">
+  <img src="https://images.unsplash.com/photo-1558121556-2a39fc528338?auto=format&fit=crop&w=200&q=70" alt="Shoe" style="width:110px;height:110px;object-fit:cover;border-radius:14px;margin-bottom:14px">
+  <div class="big-number">404</div>
+  <h2>Looks like this page took a wrong turn</h2>
+  <p style="color:var(--text-soft)">The page you are looking for does not exist or may have been moved.</p>
+  <a href="index.html" class="btn btn-primary" style="margin-top:10px">Back to Home</a>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Velora</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner container">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 17L9 4L12 11L15 6L22 17H2Z" fill="var(--brand)"/></svg>
+      <span>Velora<small>Step Into Style</small></span>
+    </a>
+    <div class="nav-icons" style="margin-left:auto">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg id="themeIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
+      </button>
+      <a href="cart.html" class="btn btn-outline btn-sm">← Back to Cart</a>
+    </div>
+  </div>
+</header>
+
+<div class="container breadcrumb"><a href="index.html">Home</a> / <a href="cart.html">Cart</a> / Checkout</div>
+
+<section class="container" style="padding-bottom:60px">
+  <div class="section-head"><h2>Checkout</h2></div>
+  <div id="checkoutBox"></div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="container foot-bottom" style="border-top:none;padding-top:0">
+    <small>© <span id="year"></span> Velora. All Rights Reserved.</small>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  function renderCheckout() {
+    var cart = getCart();
+    var box = document.getElementById("checkoutBox");
+
+    if (cart.length === 0) {
+      box.innerHTML = '<div class="no-results"><h3 style="color:var(--text)">Your cart is empty</h3><p>Add a few shoes before checking out.</p>' +
+        '<a href="shop.html" class="btn btn-primary" style="margin-top:16px">Go to Shop</a></div>';
+      return;
+    }
+
+    var totals = getCartTotals();
+    var linesHtml = "";
+    for (var i = 0; i < cart.length; i++) {
+      var product = findProduct(cart[i].id);
+      if (product === null) { continue; }
+      linesHtml += '<div class="summary-line"><span>' + product.name + ' × ' + cart[i].qty + '</span><span>' + formatPrice(product.price * cart[i].qty) + '</span></div>';
+    }
+    var shippingText = (totals.shipping === 0) ? "FREE" : formatPrice(totals.shipping);
+
+    box.innerHTML =
+      '<div class="checkout-layout">' +
+        '<div>' +
+          '<div class="form-card">' +
+            '<h3>Shipping Address</h3>' +
+            '<div class="form-grid-2">' +
+              '<div class="form-field"><label>Full Name</label><input type="text" id="ckName" placeholder="Your name"></div>' +
+              '<div class="form-field"><label>Phone Number</label><input type="tel" id="ckPhone" placeholder="10-digit mobile number"></div>' +
+            '</div>' +
+            '<div class="form-field"><label>Address</label><input type="text" id="ckAddress" placeholder="House no., street, area"></div>' +
+            '<div class="form-grid-2">' +
+              '<div class="form-field"><label>City</label><input type="text" id="ckCity" placeholder="City"></div>' +
+              '<div class="form-field"><label>Pincode</label><input type="text" id="ckPin" placeholder="6-digit pincode"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="form-card">' +
+            '<h3>Payment Method</h3>' +
+            '<label class="pay-option"><input type="radio" name="pay" checked> Cash on Delivery</label>' +
+            '<label class="pay-option"><input type="radio" name="pay"> UPI (Google Pay / PhonePe / Paytm)</label>' +
+            '<label class="pay-option"><input type="radio" name="pay"> Credit / Debit Card</label>' +
+            '<label class="pay-option"><input type="radio" name="pay"> Net Banking</label>' +
+          '</div>' +
+        '</div>' +
+        '<div class="summary-box">' +
+          '<h3>Order Summary</h3>' +
+          linesHtml +
+          '<div class="summary-line"><span>Shipping</span><span>' + shippingText + '</span></div>' +
+          '<div class="summary-line"><span>Tax (5%)</span><span>' + formatPrice(totals.tax) + '</span></div>' +
+          '<div class="summary-line total"><span>Total</span><span>' + formatPrice(totals.total) + '</span></div>' +
+          '<button class="btn btn-primary btn-block" style="margin-top:16px" onclick="placeOrder()">Place Order</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function placeOrder() {
+    var name = document.getElementById("ckName").value.trim();
+    var phone = document.getElementById("ckPhone").value.trim();
+    var address = document.getElementById("ckAddress").value.trim();
+
+    if (name === "" || phone === "" || address === "") {
+      showToast("Please fill in your shipping details");
+      return;
+    }
+
+    localStorage.setItem("cart", "[]");
+
+    document.getElementById("checkoutBox").innerHTML =
+      '<div class="no-results">' +
+        '<div class="big-ico">✅</div>' +
+        '<h3 style="color:var(--text)">Order placed successfully</h3>' +
+        '<p>Thank you, ' + name + '! This is a demo project, so no real order has actually been placed.</p>' +
+        '<a href="index.html" class="btn btn-primary" style="margin-top:16px">Back to Home</a>' +
+      '</div>';
+
+    updateCounts();
+  }
+
+  renderCheckout();
+</script>
+</body>
+</html>

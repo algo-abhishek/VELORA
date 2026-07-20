@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — Velora</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner container">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 17L9 4L12 11L15 6L22 17H2Z" fill="var(--brand)"/></svg>
+      <span>Velora<small>Step Into Style</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-icons" style="margin-left:auto">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg id="themeIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
+      </button>
+      <a class="icon-btn" href="wishlist.html" aria-label="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        <span class="badge" id="wishCount">0</span>
+      </a>
+      <span id="userNavArea"></span>
+      <button class="icon-btn burger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</header>
+
+<div class="container breadcrumb"><a href="index.html">Home</a> / Cart</div>
+
+<section class="container" style="padding-bottom:60px">
+  <div class="section-head"><h2>Your Cart</h2></div>
+  <div id="cartBox"></div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="container foot-bottom" style="border-top:none;padding-top:0">
+    <small>© <span id="year"></span> Velora. All Rights Reserved. Developed by Abhishek kumar</small>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* Draw the whole cart page. We call this again any time something
+     changes (remove item, change quantity) so it stays up to date. */
+  function renderCartPage() {
+    var cart = getCart();
+    var box = document.getElementById("cartBox");
+
+    if (cart.length === 0) {
+      box.innerHTML =
+        '<div class="no-results">' +
+          '<div class="big-ico">🛒</div>' +
+          '<h3 style="color:var(--text)">Your cart is empty</h3>' +
+          '<p>Looks like you have not added anything yet.</p>' +
+          '<a href="shop.html" class="btn btn-primary" style="margin-top:16px">Start Shopping</a>' +
+        '</div>';
+      return;
+    }
+
+    var totals = getCartTotals();
+    var itemsHtml = "";
+
+    for (var i = 0; i < cart.length; i++) {
+      var line = cart[i];
+      var product = findProduct(line.id);
+      if (product === null) { continue; }
+
+      itemsHtml += '<div class="cart-page-item">';
+      itemsHtml +=   '<div class="item-image"><img src="' + product.img + '" alt="' + product.name + '"></div>';
+      itemsHtml +=   '<div>';
+      itemsHtml +=     '<h4><a href="product.html?id=' + product.id + '">' + product.name + '</a></h4>';
+      itemsHtml +=     '<span class="meta-text">Size: UK ' + line.size + '</span>';
+      itemsHtml +=     '<span class="meta-text">Colour: ' + line.color + '</span>';
+      itemsHtml +=     '<div class="qty-row" style="margin-top:8px">';
+      itemsHtml +=       '<button class="qty-btn" onclick="changeCartQty(' + i + ', -1)">−</button>';
+      itemsHtml +=       '<span>' + line.qty + '</span>';
+      itemsHtml +=       '<button class="qty-btn" onclick="changeCartQty(' + i + ', 1)">+</button>';
+      itemsHtml +=     '</div>';
+      itemsHtml +=   '</div>';
+      itemsHtml +=   '<div style="text-align:right">';
+      itemsHtml +=     '<div class="price">' + formatPrice(product.price * line.qty) + '</div>';
+      itemsHtml +=     '<button class="remove-btn" style="margin-top:8px" onclick="removeFromCart(' + i + ')">Remove</button>';
+      itemsHtml +=   '</div>';
+      itemsHtml += '</div>';
+    }
+
+    var shippingText = (totals.shipping === 0) ? "FREE" : formatPrice(totals.shipping);
+
+    box.innerHTML =
+      '<div class="cart-layout">' +
+        '<div>' + itemsHtml + '</div>' +
+        '<div class="summary-box">' +
+          '<h3>Order Summary</h3>' +
+          '<div class="summary-line"><span>Subtotal</span><span>' + formatPrice(totals.subtotal) + '</span></div>' +
+          '<div class="summary-line"><span>Shipping</span><span>' + shippingText + '</span></div>' +
+          '<div class="summary-line"><span>Tax (5%)</span><span>' + formatPrice(totals.tax) + '</span></div>' +
+          '<div class="coupon-row">' +
+            '<input type="text" id="couponInput" placeholder="Coupon code">' +
+            '<button class="btn btn-outline btn-sm" onclick="applyCoupon()">Apply</button>' +
+          '</div>' +
+          '<div class="summary-line total"><span>Total</span><span>' + formatPrice(totals.total) + '</span></div>' +
+          '<a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:16px">Proceed to Checkout</a>' +
+          '<a href="shop.html" class="btn btn-outline btn-block" style="margin-top:10px">← Continue Shopping</a>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function applyCoupon() {
+    var code = document.getElementById("couponInput").value.trim().toUpperCase();
+    if (code === "STRIDE10") {
+      showToast("Coupon applied! 10% off will show at checkout.");
+    } else if (code !== "") {
+      showToast("Invalid coupon code");
+    }
+  }
+
+  renderCartPage();
+</script>
+</body>
+</html>

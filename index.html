@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velora — Step Into Style</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- TOP BAR  -->
+<div class="topbar">
+  <div class="container">
+    <div class="promo">🚚 Free delivery on orders above ₹2,999</div>
+    <div class="topbar-links">
+      <a href="profile.html">Track Order</a>
+      <a href="faq.html">Help &amp; Support</a>
+      <a href="contact.html">Store Locator</a>
+    </div>
+  </div>
+</div>
+
+<!--  NAVIGATION BAR -->
+<header class="nav">
+  <div class="nav-inner container">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 17L9 4L12 11L15 6L22 17H2Z" fill="var(--brand)"/></svg>
+      <span>Velora<small>Step Into Style</small></span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <form class="search-box" onsubmit="goSearch(event)">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder="Search for shoes...">
+    </form>
+
+    <div class="nav-icons">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <svg id="themeIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg>
+      </button>
+      <a class="icon-btn" href="wishlist.html" aria-label="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        <span class="badge" id="wishCount">0</span>
+      </a>
+      <button class="icon-btn" id="cartBtn" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="badge" id="cartCount">0</span>
+      </button>
+      <span id="userNavArea"></span>
+      <button class="icon-btn burger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</header>
+
+<!-- HERO SLIDESHOW  -->
+<section class="hero">
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide active">
+      <div class="hero-copy">
+        <span class="eyebrow">✨ New Season Collection</span>
+        <h1>Walk Beyond<span>Style</span></h1>
+        <p>Discover premium quality shoes that define comfort &amp; style — built for every step of your day.</p>
+        <a href="shop.html" class="btn btn-primary">Shop Now →</a>
+      </div>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1595805719192-b31da140a625?w=600&q=80" alt="White running shoe">
+      </div>
+    </div>
+    <div class="hero-slide">
+      <div class="hero-copy">
+        <span class="eyebrow">🔥 Trending Now</span>
+        <h1>Run Faster<span>Feel Lighter</span></h1>
+        <p>Engineered cushioning and breathable uppers made for runners who don't slow down.</p>
+        <a href="shop.html?category=Running" class="btn btn-primary">Explore Running →</a>
+      </div>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1580902215223-647d515e04fa?w=600&q=80" alt="Black and white running shoe">
+      </div>
+    </div>
+    <div class="hero-slide">
+      <div class="hero-copy">
+        <span class="eyebrow">🏷️ Up to 50% Off</span>
+        <h1>Weekend<span>Sale Drop</span></h1>
+        <p>Selected sneakers marked down for a limited time. Grab your pair before they're gone.</p>
+        <a href="shop.html" class="btn btn-primary">View Offers →</a>
+      </div>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1650320079970-b4ee8f0dae33?w=600&q=80" alt="Red and white sneaker pair">
+      </div>
+    </div>
+    <button class="hero-arrow prev" id="heroPrev" aria-label="Previous slide">‹</button>
+    <button class="hero-arrow next" id="heroNext" aria-label="Next slide">›</button>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="features">
+    <div class="feature">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h4l3 3v4h-7"/><circle cx="6" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg></div>
+      <div><h4>Free Shipping</h4><p>On orders above ₹2,999</p></div>
+    </div>
+    <div class="feature">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3M3 8h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/><path d="M9 12h6"/></svg></div>
+      <div><h4>Easy Returns</h4><p>Within 30 days</p></div>
+    </div>
+    <div class="feature">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.4 8-8 10-4.6-2-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <div><h4>Secure Payment</h4><p>100% secure checkout</p></div>
+    </div>
+    <div class="feature">
+      <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/></svg></div>
+      <div><h4>Best Quality</h4><p>Premium products</p></div>
+    </div>
+  </div>
+</div>
+
+<!--  SHOP BY CATEGORY (shoe types)  -->
+  
+<section class="section container">
+  <div class="section-head">
+    <h2>Shop by Category</h2>
+    <a href="shop.html" class="view-all">View All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</section>
+
+<!-- FEATURED PRODUCTS  -->
+
+<section class="section container" style="padding-top:0">
+  <div class="section-head">
+    <h2>Featured Products</h2>
+    <a href="shop.html" class="view-all">View All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+  <div class="prod-grid" id="featuredGrid"></div>
+</section>
+
+<!-- OFFER + TESTIMONIAL  -->
+<section class="section container" style="padding-top:0">
+  <div class="split2">
+    <div class="offer-card">
+      <span class="offer-tag">Special Offer</span>
+      <h3>Up to<br><b>50%</b> OFF</h3>
+      <p>On selected items, this week only.</p>
+      <a href="shop.html" class="btn btn-primary" style="width:fit-content">Shop Now</a>
+      <img src="https://images.unsplash.com/photo-1650320079970-b4ee8f0dae33?w=500&q=80" alt="Red sneaker">
+    </div>
+
+    <div class="testi-card">
+      <div id="testiSlides"></div>
+      <div class="testi-nav">
+        <button class="circle-btn" id="testiPrev" aria-label="Previous testimonial">‹</button>
+        <div class="testi-dots" id="testiDots"></div>
+        <button class="circle-btn" id="testiNext" aria-label="Next testimonial">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER  -->
+<section class="container" style="padding-bottom:60px">
+  <div class="newsletter">
+    <div>
+      <h3>Subscribe to our Newsletter</h3>
+      <p>Get the latest updates on new arrivals and exclusive offers.</p>
+    </div>
+    <form class="newsletter-form" onsubmit="submitNewsletter(event)">
+      <input type="email" placeholder="Enter your email" required>
+      <button class="btn btn-primary" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!--  FOOTER -->
+<footer>
+  <div class="container foot-grid">
+    <div class="foot-brand">
+      <a href="index.html" class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 17L9 4L12 11L15 6L22 17H2Z" fill="var(--brand)"/></svg>
+        <span>Velora<small>Step Into Style</small></span>
+      </a>
+      <p>Step into a world of comfort, style, and performance.</p>
+    </div>
+    <div>
+      <h5>Quick Links</h5>
+      <ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="admin.html">Manage Products</a></li></ul>
+    </div>
+    <div>
+      <h5>Customer Service</h5>
+      <ul><li><a href="profile.html">Track Order</a></li><li><a href="policies.html#returns">Returns &amp; Exchanges</a></li><li><a href="policies.html#shipping">Shipping Policy</a></li><li><a href="faq.html">FAQ</a></li></ul>
+    </div>
+    <div>
+      <h5>Information</h5>
+      <ul><li><a href="policies.html#privacy">Privacy Policy</a></li><li><a href="policies.html#terms">Terms &amp; Conditions</a></li><li><a href="contact.html">Store Locator</a></li><li><a href="policies.html#size">Size Guide</a></li></ul>
+    </div>
+    <div>
+      <h5>Follow Us</h5>
+      <div class="socials">
+        <a href="#" aria-label="Facebook">f</a>
+        <a href="#" aria-label="Instagram">ig</a>
+        <a href="#" aria-label="Twitter">tw</a>
+        <a href="#" aria-label="YouTube">yt</a>
+      </div>
+    </div>
+  </div>
+  <div class="container foot-bottom">
+    <small>© <span id="year"></span> Velora. All Rights Reserved. Developed by Abhishek kumar</small>
+    <div class="cards-row"><span>VISA</span><span>Mastercard</span><span>UPI</span><span>PayPal</span></div>
+  </div>
+</footer>
+
+<!-- MINI CART DRAWER -->
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="icon-btn" id="closeDrawer" aria-label="Close cart">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <div class="total-row"><span>Total</span><span id="drawerTotal">₹0</span></div>
+    <a href="cart.html" class="btn btn-primary btn-block">View Cart &amp; Checkout</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script src="js/drawer.js"></script>
+<script>
+  /* ---------- Shop by category (5 shoe types with real photos) ---------- */
+  var categoryIcons = { Running: "🏃", Casual: "👟", Sports: "⚽", Sneakers: "👟", Formal: "🥿" };
+  var catHtml = "";
+  var typeNames = ["Running", "Casual", "Sports", "Sneakers", "Formal"];
+  for (var i = 0; i < typeNames.length; i++) {
+    var typeName = typeNames[i];
+    catHtml += '<a href="shop.html?category=' + typeName + '" class="cat-card">';
+    catHtml +=   '<img src="' + categoryPhotos[typeName] + '" alt="' + typeName + ' shoes">';
+    catHtml +=   '<div class="cat-overlay">';
+    catHtml +=     '<div class="badge-ico">' + categoryIcons[typeName] + '</div>';
+    catHtml +=     '<div><strong>' + typeName + '</strong><span>Explore Now →</span></div>';
+    catHtml +=   '</div>';
+    catHtml += '</a>';
+  }
+  document.getElementById("catGrid").innerHTML = catHtml;
+
+  /* ---------- Featured products (first 8 shoes) ---------- */
+  function buildProductCard(item) {
+    var liked = isInWishlist(item.id) ? "active" : "";
+    var discount = Math.round(100 - (item.price / item.old * 100));
+    var swatches = "";
+    for (var c = 0; c < item.colors.length; c++) {
+      swatches += '<span class="mini-swatch" style="background:' + colorHex[item.colors[c]] + '" title="' + item.colors[c] + '"></span>';
+    }
+
+    var html = '';
+    html += '<div class="prod-card">';
+    html +=   '<div class="prod-thumb">';
+    html +=     '<span class="discount-tag">-' + discount + '%</span>';
+    html +=     '<button class="wish-btn ' + liked + '" onclick="handleWish(event, ' + item.id + ')">';
+    html +=       '<svg width="16" height="16" viewBox="0 0 24 24" fill="' + (liked ? "currentColor" : "none") + '" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+    html +=     '</button>';
+    html +=     '<a href="product.html?id=' + item.id + '"><img src="' + item.img + '" alt="' + item.name + '" loading="lazy"></a>';
+    html +=   '</div>';
+    html +=   '<div class="prod-body">';
+    html +=     '<span class="prod-brand">' + item.brand + '</span>';
+    html +=     '<h4><a href="product.html?id=' + item.id + '">' + item.name + '</a></h4>';
+    html +=     '<div class="price-row"><span class="price">' + formatPrice(item.price) + '</span><span class="old-price">' + formatPrice(item.old) + '</span></div>';
+    html +=     '<div class="stars">' + starsText(item.rating) + ' <span>(' + item.reviews + ')</span></div>';
+    html +=     '<div class="mini-swatch-row">' + swatches + '</div>';
+    html +=     '<button class="add-cart-btn" onclick="addToCart(' + item.id + ', ' + item.sizes[0] + ', \'' + item.colors[0] + '\', 1)">Add to Cart</button>';
+    html +=   '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function handleWish(event, id) {
+    event.preventDefault();
+    var nowLiked = toggleWishlist(id);
+    var btn = event.currentTarget;
+    btn.classList.toggle("active", nowLiked);
+  }
+
+  var featuredHtml = "";
+  for (var f = 0; f < 8; f++) {
+    featuredHtml += buildProductCard(products[f]);
+  }
+  document.getElementById("featuredGrid").innerHTML = featuredHtml;
+
+  /* ---------- Hero slideshow ---------- */
+  var heroSlides = document.querySelectorAll(".hero-slide");
+  var heroDotsWrap = document.getElementById("heroDots");
+  var heroIndex = 0;
+
+  for (var h = 0; h < heroSlides.length; h++) {
+    var dot = document.createElement("button");
+    if (h === 0) { dot.classList.add("active"); }
+    dot.setAttribute("data-i", h);
+    dot.addEventListener("click", function () { goHero(Number(this.getAttribute("data-i"))); });
+    heroDotsWrap.appendChild(dot);
+  }
+
+  function goHero(i) {
+    heroSlides[heroIndex].classList.remove("active");
+    heroDotsWrap.children[heroIndex].classList.remove("active");
+    heroIndex = (i + heroSlides.length) % heroSlides.length;
+    heroSlides[heroIndex].classList.add("active");
+    heroDotsWrap.children[heroIndex].classList.add("active");
+  }
+
+  document.getElementById("heroPrev").addEventListener("click", function () { goHero(heroIndex - 1); });
+  document.getElementById("heroNext").addEventListener("click", function () { goHero(heroIndex + 1); });
+
+  var heroTimer = setInterval(function () { goHero(heroIndex + 1); }, 5500);
+  var heroSection = document.querySelector(".hero");
+  heroSection.addEventListener("mouseenter", function () { clearInterval(heroTimer); });
+  heroSection.addEventListener("mouseleave", function () { heroTimer = setInterval(function () { goHero(heroIndex + 1); }, 5500); });
+
+  /* ---------- Testimonial slideshow ---------- */
+  var testimonials = [
+    { text: "Urban Stride provides the perfect blend of style and comfort. Absolutely love the collection!", name: "Riya Sharma", rating: 5 },
+    { text: "Fast delivery and the quality is even better than the photos. My new go-to shoe store.", name: "Aman Verma", rating: 5 },
+    { text: "Great sizing guide and easy returns made buying online completely stress-free.", name: "Sneha Iyer", rating: 4 }
+  ];
+  var testiIndex = 0;
+  var testiSlidesWrap = document.getElementById("testiSlides");
+  var testiDotsWrap = document.getElementById("testiDots");
+
+  function renderTesti() {
+    var t = testimonials[testiIndex];
+    testiSlidesWrap.innerHTML =
+      '<div class="quote-mark">"</div>' +
+      '<p class="testi-text">' + t.text + '</p>' +
+      '<div class="testi-person">' +
+        '<span class="avatar-circle">' + t.name.charAt(0) + '</span>' +
+        '<div><strong>' + t.name + '</strong><div class="stars">' + starsText(t.rating) + '</div></div>' +
+      '</div>';
+
+    var dotsHtml = "";
+    for (var d = 0; d < testimonials.length; d++) {
+      dotsHtml += '<button data-i="' + d + '" class="' + (d === testiIndex ? "active" : "") + '"></button>';
+    }
+    testiDotsWrap.innerHTML = dotsHtml;
+
+    var dotButtons = testiDotsWrap.querySelectorAll("button");
+    for (var db = 0; db < dotButtons.length; db++) {
+      dotButtons[db].addEventListener("click", function () {
+        testiIndex = Number(this.getAttribute("data-i"));
+        renderTesti();
+      });
+    }
+  }
+
+  document.getElementById("testiPrev").addEventListener("click", function () {
+    testiIndex = (testiIndex - 1 + testimonials.length) % testimonials.length;
+    renderTesti();
+  });
+  document.getElementById("testiNext").addEventListener("click", function () {
+    testiIndex = (testiIndex + 1) % testimonials.length;
+    renderTesti();
+  });
+  renderTesti();
+  setInterval(function () {
+    testiIndex = (testiIndex + 1) % testimonials.length;
+    renderTesti();
+  }, 6000);
+</script>
+</body>
+</html>

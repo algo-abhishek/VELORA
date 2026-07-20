@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Products — Velora</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner container">
+    <a href="index.html" class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M2 17L9 4L12 11L15 6L22 17H2Z" fill="var(--brand)"/></svg>
+      <span>Velora<small>Step Into Style</small></span>
+    </a>
+    <a href="shop.html" class="btn btn-outline btn-sm" style="margin-left:auto">← Back to Shop</a>
+  </div>
+</header>
+
+<div class="container breadcrumb"><a href="index.html">Home</a> / Manage Products</div>
+
+<section class="container" style="padding-bottom:60px">
+  <div class="section-head">
+    <h2 id="formTitle">Add a New Product</h2>
+  </div>
+
+  <!--  ADD / EDIT FORM -->
+  <div class="form-card">
+    <form id="productForm" onsubmit="handleFormSubmit(event)">
+      <input type="hidden" id="editingId" value="">
+
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Product Name</label>
+          <input type="text" id="fName" placeholder="e.g. Air Glide Runner" required>
+        </div>
+        <div class="form-field">
+          <label>Brand</label>
+          <input type="text" id="fBrand" placeholder="e.g. Stridecore" required>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Gender</label>
+          <select id="fGender">
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="kids">Kids</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Category (shoe type)</label>
+          <select id="fCategory">
+            <option value="Running">Running</option>
+            <option value="Casual">Casual</option>
+            <option value="Sports">Sports</option>
+            <option value="Sneakers">Sneakers</option>
+            <option value="Formal">Formal</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Price (₹)</label>
+          <input type="number" id="fPrice" placeholder="e.g. 3499" required min="1">
+        </div>
+        <div class="form-field">
+          <label>Old Price (₹, before discount)</label>
+          <input type="number" id="fOld" placeholder="e.g. 4499" required min="1">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Rating (0 to 5)</label>
+          <input type="number" id="fRating" placeholder="e.g. 4.5" step="0.1" min="0" max="5" required>
+        </div>
+        <div class="form-field">
+          <label>Number of Reviews</label>
+          <input type="number" id="fReviews" placeholder="e.g. 120" min="0" required>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Sizes (UK, separated by commas)</label>
+        <input type="text" id="fSizes" placeholder="e.g. 6, 7, 8, 9, 10" required>
+      </div>
+
+      <div class="form-field">
+        <label>Colours (separated by commas - use: Black, White, Grey, Navy, Red, Brown, Blue, Pink, Beige, Purple, Green, Orange, Yellow)</label>
+        <input type="text" id="fColors" placeholder="e.g. Black, White" required>
+      </div>
+
+      <div class="form-field">
+        <label>Image URL</label>
+        <input type="text" id="fImg" placeholder="Paste a photo link here (e.g. from images.unsplash.com)" required>
+      </div>
+
+      <div style="display:flex; gap:12px">
+        <button type="submit" class="btn btn-primary" id="submitBtnLabel">Add Product</button>
+        <button type="button" class="btn btn-outline" onclick="resetForm()">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <!--PRODUCT LIST -->
+  <div class="section-head" style="margin-top:40px">
+    <h2>All Products (<span id="productCount">0</span>)</h2>
+    <button class="btn btn-outline btn-sm" onclick="resetToDefaults()">Reset to Default Products</button>
+  </div>
+
+  <div id="productTable"></div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="container foot-bottom" style="border-top:none;padding-top:0">
+    <small>© <span id="year"></span> Velora. All Rights Reserved. Developed by Abhishek Kumar</small>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ---------------------------------------------------------
+     This page is the one place where products can be added,
+     edited or removed. Everything is saved with saveProducts()
+     (from data.js), which writes to localStorage - so every
+     other page (home, shop, product page) picks up the change
+     automatically the next time it loads.
+     --------------------------------------------------------- */
+
+  /* Work out the next free id number, so new products don't clash */
+  function getNextId() {
+    var maxId = 0;
+    for (var i = 0; i < products.length; i++) {
+      if (products[i].id > maxId) {
+        maxId = products[i].id;
+      }
+    }
+    return maxId + 1;
+  }
+
+  /* Turn "6, 7, 8" into [6, 7, 8] */
+  function parseSizes(text) {
+    var parts = text.split(",");
+    var sizes = [];
+    for (var i = 0; i < parts.length; i++) {
+      var num = Number(parts[i].trim());
+      if (!isNaN(num) && parts[i].trim() !== "") {
+        sizes.push(num);
+      }
+    }
+    return sizes;
+  }
+
+  /* Turn "Black, White" into ["Black", "White"] */
+  function parseColors(text) {
+    var parts = text.split(",");
+    var colors = [];
+    for (var i = 0; i < parts.length; i++) {
+      var name = parts[i].trim();
+      if (name !== "") {
+        colors.push(name);
+      }
+    }
+    return colors;
+  }
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+
+    var name = document.getElementById("fName").value.trim();
+    var brand = document.getElementById("fBrand").value.trim();
+    var gender = document.getElementById("fGender").value;
+    var category = document.getElementById("fCategory").value;
+    var price = Number(document.getElementById("fPrice").value);
+    var old = Number(document.getElementById("fOld").value);
+    var rating = Number(document.getElementById("fRating").value);
+    var reviews = Number(document.getElementById("fReviews").value);
+    var sizes = parseSizes(document.getElementById("fSizes").value);
+    var colors = parseColors(document.getElementById("fColors").value);
+    var img = document.getElementById("fImg").value.trim();
+
+    if (sizes.length === 0) {
+      showToast("Please enter at least one size");
+      return;
+    }
+    if (colors.length === 0) {
+      showToast("Please enter at least one colour");
+      return;
+    }
+
+    var editingId = document.getElementById("editingId").value;
+
+    if (editingId === "") {
+      /* Adding a brand new product */
+      var newProduct = {
+        id: getNextId(), name: name, brand: brand, gender: gender, category: category,
+        price: price, old: old, rating: rating, reviews: reviews, sizes: sizes, colors: colors, img: img
+      };
+      products.push(newProduct);
+      showToast("Product added");
+    } else {
+      /* Editing an existing product - find it and update its fields */
+      var product = findProduct(editingId);
+      if (product !== null) {
+        product.name = name;
+        product.brand = brand;
+        product.gender = gender;
+        product.category = category;
+        product.price = price;
+        product.old = old;
+        product.rating = rating;
+        product.reviews = reviews;
+        product.sizes = sizes;
+        product.colors = colors;
+        product.img = img;
+        showToast("Product updated");
+      }
+    }
+
+    saveProducts();
+    resetForm();
+    renderProductTable();
+  }
+
+  function resetForm() {
+    document.getElementById("productForm").reset();
+    document.getElementById("editingId").value = "";
+    document.getElementById("formTitle").textContent = "Add a New Product";
+    document.getElementById("submitBtnLabel").textContent = "Add Product";
+  }
+
+  function editProduct(id) {
+    var product = findProduct(id);
+    if (product === null) {
+      return;
+    }
+
+    document.getElementById("editingId").value = product.id;
+    document.getElementById("fName").value = product.name;
+    document.getElementById("fBrand").value = product.brand;
+    document.getElementById("fGender").value = product.gender;
+    document.getElementById("fCategory").value = product.category;
+    document.getElementById("fPrice").value = product.price;
+    document.getElementById("fOld").value = product.old;
+    document.getElementById("fRating").value = product.rating;
+    document.getElementById("fReviews").value = product.reviews;
+    document.getElementById("fSizes").value = product.sizes.join(", ");
+    document.getElementById("fColors").value = product.colors.join(", ");
+    document.getElementById("fImg").value = product.img;
+
+    document.getElementById("formTitle").textContent = "Edit Product";
+    document.getElementById("submitBtnLabel").textContent = "Save Changes";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function deleteProduct(id) {
+    var sure = confirm("Delete this product? This cannot be undone.");
+    if (sure === false) {
+      return;
+    }
+
+    for (var i = 0; i < products.length; i++) {
+      if (products[i].id === Number(id)) {
+        products.splice(i, 1);
+        break;
+      }
+    }
+    saveProducts();
+    renderProductTable();
+    showToast("Product deleted");
+  }
+
+  function resetToDefaults() {
+    var sure = confirm("This will remove any products you added or changed, and bring back the original list. Continue?");
+    if (sure === false) {
+      return;
+    }
+    localStorage.removeItem("productsData");
+    showToast("Products reset to default");
+    setTimeout(function () { window.location.reload(); }, 600);
+  }
+
+  /* Draw the table of every product currently in the store */
+  function renderProductTable() {
+    document.getElementById("productCount").textContent = products.length;
+    var box = document.getElementById("productTable");
+
+    var html = '<div style="overflow-x:auto"><table class="spec-table" style="min-width:700px">';
+    html += '<tr style="font-weight:700"><td>Photo</td><td>Name</td><td>Brand</td><td>Gender</td><td>Category</td><td>Price</td><td>Actions</td></tr>';
+
+    for (var i = 0; i < products.length; i++) {
+      var p = products[i];
+      html += '<tr>';
+      html +=   '<td><img src="' + p.img + '" alt="' + p.name + '" style="width:50px;height:50px;object-fit:cover;border-radius:8px"></td>';
+      html +=   '<td>' + p.name + '</td>';
+      html +=   '<td>' + p.brand + '</td>';
+      html +=   '<td style="text-transform:capitalize">' + p.gender + '</td>';
+      html +=   '<td>' + p.category + '</td>';
+      html +=   '<td>' + formatPrice(p.price) + '</td>';
+      html +=   '<td style="white-space:nowrap">' +
+                  '<button class="btn btn-outline btn-sm" onclick="editProduct(' + p.id + ')">Edit</button> ' +
+                  '<button class="btn btn-outline btn-sm" style="color:var(--coral);border-color:var(--coral)" onclick="deleteProduct(' + p.id + ')">Delete</button>' +
+                '</td>';
+      html += '</tr>';
+    }
+    html += '</table></div>';
+    box.innerHTML = html;
+  }
+
+  renderProductTable();
+</script>
+</body>
+</html>
